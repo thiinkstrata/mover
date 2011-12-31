@@ -28,7 +28,7 @@ module Mover
       from_class = self
       
       # Conditions
-      conditions = options[:conditions] || '1'
+      conditions = options[:conditions] || (connection.class.to_s.include?('PostgreSQL') ? "'1'" : '1' )
       conditions = self.sanitize_sql(conditions)
       where = "WHERE #{conditions}"
       
@@ -141,7 +141,7 @@ module Mover
             end
           end
           
-          if connection.class.to_s.include?('PostgreSQL')
+          if connection.class.to_s.include?('PostgreSQL') 
             connection.execute(<<-SQL)
               UPDATE #{to[:table]}
                 AS t
